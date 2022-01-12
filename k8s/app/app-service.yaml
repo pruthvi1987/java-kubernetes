@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: myapp
-  namespace: dev-to
+  namespace: azk8s-dev
 spec:
   selector:
     app: myapp
