@@ -18,7 +18,7 @@ spec:
         containers:
           - name: myapp
             image: azcoderegistry.azurecr.io/java-kubernetes:v1.#{Build.BuildId}#
-            imagePullPolicy: Never
+            imagePullPolicy: Always
             ports:
               - containerPort: 8080
                 name: http
