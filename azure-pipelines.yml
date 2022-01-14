@@ -23,10 +23,8 @@ stages:
   jobs:
   - job: codeAnalysis
     steps:
-    - script: echo Code Analysis
-    - task: Bash@3
+    - task: CmdLine@2
       inputs:
-        targetType: 'inline'
         script: 'mvn sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=./src -Dsonar.java.binaries=**/* -Dsonar.projectName=$PROJECT_NAME -Dsonar.branch.name=$BRANCH'
 
 - stage: Build_Package
