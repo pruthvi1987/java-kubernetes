@@ -9,11 +9,32 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  tag: 1.0.0--$(Build.BuildId) 
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+
+- stage: Code_Analysis
+  displayName: Code Analysis
+  jobs:
+  - job: codeAnalysis
+    steps:
+    - script: echo Code Analysis
+- stage: Build_Package
+  displayName: Build Package
+  jobs:
+  - job: buildPackage
+    steps:
+    - script: echo Build Package
+- stage: Build_Image
+  displayName: Build and Push Image
+  jobs:
+  - job: buildImage
+    steps:
+    - script: echo Build Image
+- stage: Deploy_Dev
+  displayName: Deploy Dev
+  jobs:
+  - job: deployDev
+    steps:
+    - script: echo Deploy Dev
