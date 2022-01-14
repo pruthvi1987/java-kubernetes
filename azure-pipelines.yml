@@ -11,6 +11,10 @@ pool:
 
 variables:
   tag: 1.0.0--$(Build.BuildId) 
+  PROJECT_NAME: java-kubernetes
+  PROJECT_KEY: pruthvi1987_java-kubernetes
+  SONAR_TOKEN: 92edc45840350f9a713dec10cf172bc9d5c56eb3
+  BRANCH: master
 
 stages:
 
@@ -20,6 +24,11 @@ stages:
   - job: codeAnalysis
     steps:
     - script: echo Code Analysis
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'mvn sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=./src -Dsonar.projectName=$PROJECT_NAME -Dsonar.branch.name=$BRANCH'
+
 - stage: Build_Package
   displayName: Build Package
   jobs:
