@@ -49,8 +49,9 @@ stages:
       inputs:
         SourceFolder: '$(system.defaultworkingdirectory)'
         Contents: |
-         **/*.jar
-         Dockerfile
+          **/*.jar
+          Dockerfile
+          k8s/**
         TargetFolder: '$(build.artifactstagingdirectory)'
       condition: succeededOrFailed()
       
@@ -73,8 +74,9 @@ stages:
     - task: Docker@2
       displayName: buildAndPush
       inputs:
-        containerRegistry: 'Azure Container Registry'
-        repository: azcoderegistry
+        containerRegistry: 'Azure Container Registry Connection'
+        repository: 'azcoderegistry'
+        command: 'buildAndPush'
         Dockerfile: '$(Pipeline.Workspace)/package/Dockerfile'
         buildContext: '$(Pipeline.Workspace)/package/target'
     
