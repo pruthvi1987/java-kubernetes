@@ -32,13 +32,53 @@ stages:
   jobs:
   - job: buildPackage
     steps:
-    - script: echo Build Package
+    
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+       
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+         **/*.jar
+         Dockerfile
+        TargetFolder: '$(build.artifactstagingdirectory)'
+      condition: succeededOrFailed()
+      
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: package'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: package
+      condition: succeededOrFailed()
+    
+
 - stage: Build_Image
+  dependsOn: Build_Package
   displayName: Build and Push Image
   jobs:
   - job: buildImage
     steps:
-    - script: echo Build Image
+    - download: current
+      artifact: package
+    - task: Docker@2
+      displayName: buildAndPush
+      inputs:
+        containerRegistry: 'Azure Container Registry'
+        repository: azcoderegistry
+        Dockerfile: '$(Pipeline.Workspace)/package/Dockerfile'
+        buildContext: '$(Pipeline.Workspace)/package/target'
+    
+
 - stage: Deploy_Dev
   displayName: Deploy Dev
   jobs:
