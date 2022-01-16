@@ -128,3 +128,4 @@ stages:
           $(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-deployment.yaml
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
+        checkLatest: true
