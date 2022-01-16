@@ -74,6 +74,7 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
+          pwd
           cd package
           docker build -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target
     - task: AzureCLI@2
