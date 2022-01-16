@@ -57,7 +57,37 @@ stages:
         azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
         action: 'Push an image'
         imageName: 'java-kubernetes:$(tag)'
+
+    - task: Docker@0
+      displayName: 'Build an image of mysql'
+      inputs:
+        azureSubscription: 'Azure Resource Manager Connection'
+        azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
+        dockerFile: '**/Dockerfile1'
+        imageName: 'mysql:5.6'
     
+    - task: Docker@0
+      displayName: 'Push an image of mysql'
+      inputs:
+        azureSubscription: 'Azure Resource Manager Connection'
+        azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
+        action: 'Push an image'
+        imageName: 'mysql:5.6'
+
+    - task: replacetokens@4
+      inputs:
+        rootDirectory: 'k8s/app'
+        targetFiles: 'app-deployment.yaml'
+        encoding: 'auto'
+        tokenPattern: 'default'
+        writeBOM: true
+        escapeType: 'none'
+        actionOnMissing: 'warn'
+        keepToken: false
+        actionOnNoFiles: 'continue'
+        enableTransforms: false
+        useLegacyPattern: false
+        enableTelemetry: true
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
       inputs:
