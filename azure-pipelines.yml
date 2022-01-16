@@ -54,7 +54,7 @@ stages:
         containerRegistry: 'Azure Container Registry Connection'
         repository: 'azcoderegistry'
         command: 'push'
-        tags: '$(tag)'
+        tags: 'java-kubernetes:$(tag)'
     
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
