@@ -75,8 +75,7 @@ stages:
       inputs:
         script: |
           pwd
-          cd package
-          docker build -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target
+          docker build -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) $(Pipeline.Workspace)/package/target
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'Azure Resource Manager Connection'
