@@ -81,7 +81,7 @@ stages:
         script: |
           pwd
           ls -lrt *
-          docker build -f $(System.ArtifactsDirectory)/package/Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) $(System.ArtifactsDirectory)/package/target
+          docker build -f Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target
         workingDirectory: '$(System.ArtifactsDirectory)/package'
     - task: AzureCLI@2
       inputs:
