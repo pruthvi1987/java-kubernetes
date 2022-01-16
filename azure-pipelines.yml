@@ -49,12 +49,14 @@ stages:
         azureSubscription: 'Azure Resource Manager Connection'
         azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
         imageName: 'java-kubernetes:$(tag)'
-    - task: Docker@2
+ 
+    - task: Docker@0
+      displayName: 'Push an image'
       inputs:
-        containerRegistry: 'Azure Container Registry Connection'
-        repository: 'azcoderegistry'
-        command: 'push'
-        tags: 'java-kubernetes:$(tag)'
+        azureSubscription: 'Azure Resource Manager Connection'
+        azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
+        action: 'Push an image'
+        imageName: 'java-kubernetes:$(tag)'
     
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
