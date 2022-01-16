@@ -121,7 +121,7 @@ stages:
         kubernetesServiceEndpoint: 'Kubernetes Service Connection'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/app/app-configmap.yaml'
+        configuration: '$(System.ArtifactsDirectory)/package/k8s/app/app-configmap.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         checkLatest: true
@@ -132,7 +132,7 @@ stages:
         kubernetesServiceEndpoint: 'Kubernetes Service Connection'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/app/app-service.yaml'
+        configuration: '$(System.ArtifactsDirectory)/package/k8s/app/app-service.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         checkLatest: true
@@ -143,7 +143,7 @@ stages:
         kubernetesServiceEndpoint: 'Kubernetes Service Connection'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/app/app-deployment.yaml'
+        configuration: '$(System.ArtifactsDirectory)/package/k8s/app/app-deployment.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         checkLatest: true
@@ -154,7 +154,7 @@ stages:
         kubernetesServiceEndpoint: 'Kubernetes Service Connection'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-service.yaml'
+        configuration: '$(System.ArtifactsDirectory)/package/k8s/mysql/mysql-service.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         checkLatest: true
@@ -165,7 +165,7 @@ stages:
         kubernetesServiceEndpoint: 'Kubernetes Service Connection'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-deployment.yaml'
+        configuration: '$(System.ArtifactsDirectory)/package/k8s/mysql/mysql-deployment.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         checkLatest: true
