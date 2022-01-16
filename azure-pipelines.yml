@@ -26,7 +26,7 @@ stages:
     - task: CmdLine@2
       inputs:
         script: 'mvn sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=./src -Dsonar.java.binaries=**/* -Dsonar.projectName=$PROJECT_NAME -Dsonar.branch.name=$BRANCH'
-  - job: ScanYML
+  - job: scanYML
     steps:
     - task: Bash@3
       displayName: InstallCheckov
