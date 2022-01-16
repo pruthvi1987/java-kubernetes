@@ -75,13 +75,10 @@ stages:
         downloadType: 'single'
         artifactName: 'package'
         downloadPath: '$(System.ArtifactsDirectory)'
-    
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
-        script: |
-          pwd
-          ls -lrt *
-          docker build -f Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target
+        targetType: 'inline'
+        script: 'docker build -f Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'
         workingDirectory: '$(System.ArtifactsDirectory)/package'
     - task: AzureCLI@2
       inputs:
