@@ -42,8 +42,11 @@ stages:
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
-       
+        goals: 'package'  
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'docker build -f $(System.ArtifactsDirectory)/package/Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'      
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
       inputs:
@@ -63,23 +66,8 @@ stages:
       condition: succeededOrFailed()
     
 
-- stage: Build_Image
-  dependsOn: Build_Package
-  displayName: Build and Push Image
-  jobs:
-  - job: buildImage
-    steps:
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'package'
-        downloadPath: '$(System.ArtifactsDirectory)'
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: 'docker build -f $(System.ArtifactsDirectory)/package/Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'
-        workingDirectory: '$(System.ArtifactsDirectory)/package/target'
+
+        
         
 - stage: Deploy_Dev
   displayName: Deploy Dev
