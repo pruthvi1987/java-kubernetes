@@ -2,7 +2,7 @@ FROM openjdk:15-alpine
 
 RUN mkdir /usr/myapp
 
-COPY package/target/java-kubernetes.jar /usr/myapp/app.jar
+COPY target/java-kubernetes.jar /usr/myapp/app.jar
 WORKDIR /usr/myapp
 
 EXPOSE 8080
