@@ -30,7 +30,7 @@ stages:
 - stage: Build
   displayName: Build 
   jobs:
-  - job: buildAppImage
+  - job: build
     steps:
     - task: Maven@3
       displayName: Build Package
@@ -56,8 +56,6 @@ stages:
         azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
         action: 'Push an image'
         imageName: 'java-kubernetes:$(tag)'
-  - job: buildDBImage
-    steps:
     - task: Docker@0
       displayName: 'Build an Image of MYSQL'
       inputs:
@@ -72,8 +70,6 @@ stages:
         azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
         action: 'Push an image'
         imageName: 'mysql:5.6'
-  - job: PublishBuildArtifacts
-    steps:
     - task: replacetokens@4
       displayName: Replace Pattern in yaml
       inputs:
@@ -99,17 +95,12 @@ stages:
           k8s/**
         TargetFolder: '$(build.artifactstagingdirectory)'
       condition: succeededOrFailed()
-      
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: package'
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
         ArtifactName: package
       condition: succeededOrFailed()
-    
-
-
-        
         
 - stage: Deploy
   displayName: Deploy
