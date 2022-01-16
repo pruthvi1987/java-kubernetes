@@ -71,15 +71,19 @@ stages:
     steps:
     - download: current
       artifact: package
-    - task: Docker@2
-      displayName: buildAndPush
+    - task: CmdLine@2
       inputs:
-        containerRegistry: 'Azure Container Registry Connection'
-        repository: 'azcoderegistry'
-        command: 'buildAndPush'
-        Dockerfile: '$(Pipeline.Workspace)/package/Dockerfile'
-        buildContext: '$(Pipeline.Workspace)/package/target'
-    
+        script: |
+          cd package
+          docker build -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Azure Resource Manager Connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login -n akscluster-pruthvi
+          docker push azcoderegistry.azurecr.io/java-kubernetes:$(tag)
 
 - stage: Deploy_Dev
   displayName: Deploy Dev
