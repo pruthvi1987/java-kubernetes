@@ -81,7 +81,7 @@ stages:
         script: |
           pwd
           docker build -f $(System.ArtifactsDirectory)/package/Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) $(System.ArtifactsDirectory)/package/target
-        workingDirectory: '$(System.ArtifactsDirectory)'
+        workingDirectory: '$(System.ArtifactsDirectory)/package'
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'Azure Resource Manager Connection'
