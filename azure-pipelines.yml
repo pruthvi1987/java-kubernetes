@@ -43,10 +43,19 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: 'package'  
-    - task: Bash@3
+    - task: Docker@0
+      displayName: 'Build an image'
       inputs:
-        targetType: 'inline'
-        script: 'docker build -f Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'      
+        azureSubscription: 'Azure Resource Manager Connection'
+        azureContainerRegistry: '{"loginServer":"azcoderegistry.azurecr.io", "id" : "/subscriptions/618d8a78-477a-4ddb-91d6-4919b3a835bd/resourceGroups/Azure-Training-pruthvirajsha/providers/Microsoft.ContainerRegistry/registries/azcoderegistry"}'
+        imageName: 'java-kubernetes:$(tag)'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Azure Container Registry Connection'
+        repository: 'azcoderegistry'
+        command: 'push'
+        tags: '$(tag)'
+    
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
       inputs:
