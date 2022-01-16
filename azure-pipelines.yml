@@ -46,7 +46,7 @@ stages:
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: 'docker build -f $(System.ArtifactsDirectory)/package/Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'      
+        script: 'docker build -f Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'      
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
       inputs:
