@@ -121,10 +121,10 @@ stages:
         useConfigurationFile: true
         configurationType: 'inline'
         inline: |
-          $(System.DefaultWorkingDirectory)/package/app/app-configmap.yaml
-          $(System.DefaultWorkingDirectory)/package/app/app-service.yaml
-          $(System.DefaultWorkingDirectory)/package/app/app-deployment.yaml
-          $(System.DefaultWorkingDirectory)/package/mysql/mysql-service.yaml
-          $(System.DefaultWorkingDirectory)/package/mysql/mysql-deployment.yaml
+          $(System.DefaultWorkingDirectory)/package/k8s/app/app-configmap.yaml
+          $(System.DefaultWorkingDirectory)/package/k8s/app/app-service.yaml
+          $(System.DefaultWorkingDirectory)/package/k8s/app/app-deployment.yaml
+          $(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-service.yaml
+          $(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-deployment.yaml
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
