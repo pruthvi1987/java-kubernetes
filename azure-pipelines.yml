@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  tag: 1.0.0--$(Build.BuildId) 
+  tag: 1.0.0-$(Build.BuildId) 
   PROJECT_NAME: java-kubernetes
   PROJECT_KEY: pruthvi1987_java-kubernetes
   SONAR_TOKEN: 92edc45840350f9a713dec10cf172bc9d5c56eb3
@@ -75,19 +75,14 @@ stages:
         downloadType: 'single'
         artifactName: 'package'
         downloadPath: '$(System.ArtifactsDirectory)'
-    - task: Bash@3
+    - task: Docker@2
       inputs:
-        targetType: 'inline'
-        script: 'docker build -f Dockerfile -t azcoderegistry.azurecr.io/java-kubernetes:$(tag) target'
-        workingDirectory: '$(System.ArtifactsDirectory)/package'
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'Azure Resource Manager Connection'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          az acr login -n akscluster-pruthvi
-          docker push azcoderegistry.azurecr.io/java-kubernetes:$(tag)
+        containerRegistry: 'Azure Container Registry Connection'
+        repository: 'azcoderegistry'
+        command: 'buildAndPush'
+        Dockerfile: '$(System.ArtifactsDirectory)/package/Dockerfile'
+        buildContext: '$(System.ArtifactsDirectory)/package/target'
+        tags: '$(tag)'
 
 - stage: Deploy_Dev
   displayName: Deploy Dev
