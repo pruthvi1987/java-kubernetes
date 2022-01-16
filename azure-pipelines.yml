@@ -105,27 +105,67 @@ stages:
 - stage: Deploy
   displayName: Deploy
   jobs:
-  - job: deployOnK8s
+  - job: deployOnK8S
     steps:
     - task: DownloadBuildArtifacts@1
+      displayName: DownloadBuildArtifacts
       inputs:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'package'
         downloadPath: '$(System.ArtifactsDirectory)'
     - task: Kubernetes@1
+      displayName: ApplyConfigmap
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Kubernetes Service Connection'
         command: 'apply'
         useConfigurationFile: true
-        configurationType: 'inline'
-        inline: |
-          $(System.DefaultWorkingDirectory)/package/k8s/app/app-configmap.yaml
-          $(System.DefaultWorkingDirectory)/package/k8s/app/app-service.yaml
-          $(System.DefaultWorkingDirectory)/package/k8s/app/app-deployment.yaml
-          $(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-service.yaml
-          $(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-deployment.yaml
+        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/app/app-configmap.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        checkLatest: true
+    - task: Kubernetes@1
+      displayName: ApplyAppService
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/app/app-service.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        checkLatest: true
+    - task: Kubernetes@1
+      displayName: ApplyAppDeployment
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/app/app-deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        checkLatest: true
+    - task: Kubernetes@1
+      displayName: ApplyMysqlService
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-service.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        checkLatest: true
+    - task: Kubernetes@1
+      displayName: ApplyMysqlDeployment
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '$(System.DefaultWorkingDirectory)/package/k8s/mysql/mysql-deployment.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         checkLatest: true
