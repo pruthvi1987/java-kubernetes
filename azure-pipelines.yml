@@ -28,7 +28,7 @@ stages:
         script: 'mvn sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=./src -Dsonar.java.binaries=**/* -Dsonar.projectName=$PROJECT_NAME -Dsonar.branch.name=$BRANCH'
 
 - stage: Build
-  displayName: Build Package
+  displayName: Build 
   jobs:
   - job: buildPackage
     steps:
@@ -115,9 +115,29 @@ stages:
 
         
         
-- stage: Deploy_Dev
-  displayName: Deploy Dev
+- stage: Deploy
+  displayName: Deploy
   jobs:
-  - job: deployDev
+  - job: deployOnK8s
     steps:
-    - script: echo Deploy Dev
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'package'
+        downloadPath: '$(System.ArtifactsDirectory)'
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+        command: 'apply'
+        useConfigurationFile: true
+        configurationType: 'inline'
+        inline: |
+          $(System.DefaultWorkingDirectory)/package/app/app-configmap.yaml
+          $(System.DefaultWorkingDirectory)/package/app/app-service.yaml
+          $(System.DefaultWorkingDirectory)/package/app/app-deployment.yaml
+          $(System.DefaultWorkingDirectory)/package/mysql/mysql-service.yaml
+          $(System.DefaultWorkingDirectory)/package/mysql/mysql-deployment.yaml
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
